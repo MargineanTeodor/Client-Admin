@@ -6,6 +6,7 @@ import DataLayer.Serialization;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.IOException;
+import java.io.Serializable;
 import java.text.SimpleDateFormat;
 import java.util.*;
 import java.util.stream.Collectors;
@@ -13,7 +14,7 @@ import java.util.stream.Collectors;
 import static java.lang.Float.parseFloat;
 import static java.lang.Integer.parseInt;
 
-public class DeliveryService extends Observable  implements IDeliveryServiceProcessing{
+public class DeliveryService extends Observable  implements IDeliveryServiceProcessing, Serializable {
     private ArrayList<MenuItem> list= new ArrayList<>();
     private ArrayList<MenuItem> listComposite= new ArrayList<>();
     private HashMap<Order,ArrayList<MenuItem>> map= new HashMap<>();
@@ -66,10 +67,12 @@ public class DeliveryService extends Observable  implements IDeliveryServiceProc
         this.list=x;
         return x;
     }
+
     @Override
     public void deleteOp (String s)
     {
         ArrayList< MenuItem> x2 =new ArrayList<>();
+        assert list.size()!=0;
         for (int i=0;i<list.size();i++)
         {
             if(list.get(i) instanceof BaseProduct)
@@ -86,8 +89,10 @@ public class DeliveryService extends Observable  implements IDeliveryServiceProc
     @Override
     public void addMenuItem(String s)
     {
+        int ct=this.list.size();
         BaseProduct e2= new BaseProduct(s,3,50,50,50,10,200);
         this.list.add(e2);
+        assert ct+1==this.list.size();
         this.afisare(this.list);
     }
     @Override
@@ -110,6 +115,7 @@ public class DeliveryService extends Observable  implements IDeliveryServiceProc
     public Order CreateNewOrder(int id,Date date, int lista, ArrayList<MenuItem> list) throws IOException {
         assert id !=0;
         assert lista != 0;
+        assert list.size()>0;
         SimpleDateFormat formatter = new SimpleDateFormat("dd/MM/yyyy HH:mm:ss");
         Order order= new Order(id, date ,lista);
         map.put(order,list);
@@ -118,7 +124,7 @@ public class DeliveryService extends Observable  implements IDeliveryServiceProc
         return order;
     }
     @Override
-    public void seriaalziation() throws IOException {
+    public  void seriaalziation() throws IOException {
         Serialization.serializa(this);
     }
     @Override
@@ -144,6 +150,7 @@ public class DeliveryService extends Observable  implements IDeliveryServiceProc
     @Override
     public void afisare(ArrayList<MenuItem> lista)
     {
+        assert lista.size()>0;
         for(MenuItem e: lista)
         {
 
@@ -179,11 +186,12 @@ public class DeliveryService extends Observable  implements IDeliveryServiceProc
                 });
     }
     @Override
-    public HashMap<Order,ArrayList<MenuItem>> raport2(int ct){
-        HashMap<Order, ArrayList<MenuItem>> menu = (HashMap<Order, ArrayList<MenuItem>>) map.entrySet().stream()
+    public void raport2(int ct){
+        this.map.entrySet().stream()
                 .filter(m -> m.getValue().size()>=ct)
-                .collect(Collectors.toList());
-        return menu;
+                .forEach(m->{
+                    this.afisare(m.getValue());
+                });
     }
     @Override
     public void createCompositeProduct(ArrayList<MenuItem> e2, String title)
@@ -194,6 +202,7 @@ public class DeliveryService extends Observable  implements IDeliveryServiceProc
         int fats=0;
         int sodium=0;
          double price=0;
+         assert e2.size()>0;
         for (Object menuItem : e2) {
             BaseProduct x = ((BaseProduct) menuItem);
             title=title+" "+x.getTitle();

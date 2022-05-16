@@ -6,7 +6,7 @@ import java.io.*;
 
 public class Serialization {
     public static void serializa(DeliveryService x) throws IOException {
-        FileOutputStream file = new FileOutputStream("Bill");
+        FileOutputStream file = new FileOutputStream("file.txt");
         ObjectOutputStream out= new ObjectOutputStream(file);
         out.writeObject(x);
         out.close();
@@ -14,7 +14,7 @@ public class Serialization {
     }
     public static DeliveryService deserialization() throws IOException, ClassNotFoundException {
         DeliveryService ds=new DeliveryService();
-        FileInputStream file = new FileInputStream("Bill");
+        FileInputStream file = new FileInputStream("file.txt");
         ObjectInput in = new ObjectInputStream(file);
         ds=(DeliveryService) in.readObject();
         in.close();

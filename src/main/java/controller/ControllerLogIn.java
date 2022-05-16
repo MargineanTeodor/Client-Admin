@@ -7,6 +7,7 @@ import gui.GuiLogIn;
 
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.io.IOException;
 import java.util.ArrayList;
 
 public class ControllerLogIn implements ActionListener {
@@ -26,8 +27,15 @@ public class ControllerLogIn implements ActionListener {
                 sem=1;
                 if (e2.getAdmin() == 0)
                     new GuiClient().main();
-                else if(e2.getAdmin()==1)
-                    new GuiAdmin().main();
+                else if(e2.getAdmin()==1) {
+                    try {
+                        new GuiAdmin().main();
+                    } catch (IOException ex) {
+                        ex.printStackTrace();
+                    } catch (ClassNotFoundException ex) {
+                        ex.printStackTrace();
+                    }
+                }
             }
         }
         if(sem==0)

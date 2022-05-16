@@ -1,10 +1,14 @@
 package gui;
 
 import Businesslayer.DeliveryService;
+import DataLayer.Serialization;
 import controller.*;
 
 import java.awt.*;
+import java.io.IOException;
 import javax.swing.*;
+
+import static DataLayer.Serialization.deserialization;
 
 
 public class GuiAdmin extends JPanel {
@@ -75,12 +79,13 @@ public class GuiAdmin extends JPanel {
     }
 
 
-    public  void main () {
+    public  void main () throws IOException, ClassNotFoundException {
         JFrame frame = new JFrame ("AdminMenu");
         frame.setDefaultCloseOperation (JFrame.EXIT_ON_CLOSE);
         frame.getContentPane().add (new GuiAdmin());
         frame.pack();
         frame.setLocationRelativeTo(null);
         frame.setVisible (true);
+        this.getDs().seriaalziation();
     }
 }

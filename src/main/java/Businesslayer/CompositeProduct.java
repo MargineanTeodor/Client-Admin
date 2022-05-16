@@ -28,11 +28,6 @@ public class CompositeProduct extends MenuItem{
     }
     @Override
     public double computePrice() {
-        double pc=0;
-        for(int i=0;i<ingrediente.size();i++)
-        {
-                pc=pc+ingrediente.get(i).computePrice();
-        }
         return price;
     }
 
